@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.MissionMapper">
+
+	<!-- 添加订单 -->
+	<insert id="addOrder" parameterType="com.example.domain.Mission">
+		INSERT INTO school.order
+			(
+				orderNo,
+				uName,
+				receiver,
+				orderType,
+				orderDetail,
+				startTime,
+				endTime,
+				orderStatus
+			)
+		VALUES
+			(
+				#{orderNo},
+				#{uName},
+				#{receiver},
+				#{orderType},
+				#{orderDetail},
+				#{startTime},
+				#{endTime},
+				#{orderStatus}
+			)		
+	</insert>
+
+	<select id="queryI" parameterType="string" resultType="com.example.domain.Order">
+		SELECT orderNo,
+			   uName,
+			   receiver,
+			   orderType,
+			   orderDetail,
+		       startTime,
+			   endTime,
+			   orderStatus
+	    FROM school.order
+	    WHERE uName = #{uName}
+	</select>
+	
+	<select id="queryIReceive" parameterType="string" resultType="com.example.domain.Order">
+		SELECT orderNo,
+			   uName,
+			   receiver,
+			   orderType,
+			   orderDetail,
+		       startTime,
+			   endTime,
+			   orderStatus
+	    FROM school.order
+	    WHERE receiver = #{receiver}
+	
+	</select>
+	
+	<select id="query" resultType="com.example.domain.Order">
+		SELECT orderNo,
+			   uName,
+			   orderType,
+			   orderDetail,
+		       startTime,
+			   endTime,
+			   receiveOrderStatus
+	    FROM school.order
+	    WHERE receiver IS NULL
+	</select>
+	
+	<select id="queryType" resultType="com.example.domain.Order" parameterType="string">
+		SELECT orderNo,
+			   uName,
+			   orderType,
+			   orderDetail,
+		       startTime,
+			   endTime,
+			   receiveOrderStatus
+	    FROM school.order
+	    WHERE receiver IS NULL
+	    AND orderType = #{orderType}
+	</select>
+	
+	<update id="receiveOrder" parameterType="com.example.domain.Order">
+		UPDATE school.order
+		SET receiver = #{receiver},
+			receiveOrderStatus = 'Horder',
+			orderStatus = 'HBorder'
+		WHERE orderNo = #{orderNo}
+	
+	</update>
+	
+	<update id="completeOrder" parameterType="com.example.domain.Order">
+		UPDATE school.order
+		SET receiveOrderStatus = 'Corder',
+			orderStatus = 'HBCorder'
+		WHERE orderNo = #{orderNo}
+	</update>
+	
+	
+</mapper>
